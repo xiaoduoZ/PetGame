@@ -94,6 +94,16 @@ Metrics: Services -> Prometheus -> Grafana
 - **Python (FastAPI)** für beide Services  
   - schnelle Umsetzung, klare Struktur, gute Bibliotheken
 
+## Planung der Arbeit
+Da es sich um ein Einzelarbeit handelt, werde ich alles übernehmen.
+
+1. **Konzept & Setup:** Architektur festlegen, Repo erstellen.
+2. **Infrastruktur:** Docker Compose für Keycloak, RabbitMQ und zwei PostgreSQL-Datenbanken aufsetzen.  
+3. **interaction-service:** REST-Endpunkte implementieren, JWT-Validierung integrieren, Interaktionen in `interaction_db` speichern und Events an RabbitMQ publizieren.  
+4. **pet-service:** REST-Endpunkte implementieren, JWT-Validierung integrieren, Events aus RabbitMQ konsumieren, Regel anwenden und Haustierstatus in `pet_db` speichern.  
+5. **Service-Kommunikation nachweisen:** Mindestens einen REST-Call zwischen den Services umsetzen.  
+6. **Monitoring:** Zentrale Logs (Loki/Promtail/Grafana) und Metriken (Prometheus/Grafana) anbinden.  
+7. **Tests & Abgabe:** Postman Tests vorbereiten (Auth + Kernablauf).
 
 
 
