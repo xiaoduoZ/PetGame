@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  interaction-db:
+    image: postgres:16
+    container_name: interaction-db
+    environment:
+      POSTGRES_DB: interaction_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+
+  pet-db:
+    image: postgres:16
+    container_name: pet-db
+    environment:
+      POSTGRES_DB: pet_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    container_name: keycloak
+    command: start-dev
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+
+  interaction-service:
+    build: ./services/interaction-service
+    container_name: interaction-service
+    ports:
+      - "8001:8000"
+    depends_on:
+      - interaction-db
+      - rabbitmq
+      - keycloak
+
+  pet-service:
+    build: ./services/pet-service
+    container_name: pet-service
+    ports:
+      - "8002:8000"
+    depends_on:
+      - pet-db
+      - rabbitmq
+      - keycloak
