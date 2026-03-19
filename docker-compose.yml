@@ -1,9 +1,9 @@
-version: "3.9"
-
 services:
   interaction-db:
     image: postgres:16
     container_name: interaction-db
+    volumes:
+      - interaction-db-data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: interaction_db
       POSTGRES_USER: postgres
@@ -14,6 +14,8 @@ services:
   pet-db:
     image: postgres:16
     container_name: pet-db
+    volumes:
+      - pet-db-data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: pet_db
       POSTGRES_USER: postgres
@@ -24,6 +26,8 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -31,6 +35,8 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.0
     container_name: keycloak
+    volumes:
+      - keycloak-data:/opt/keycloak/data
     command: start-dev
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
@@ -38,11 +44,64 @@ services:
     ports:
       - "8080:8080"
 
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: prometheus
+    volumes:
+      - ./infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    depends_on:
+      - interaction-service
+      - pet-service
+
+  loki:
+    image: grafana/loki:3.1.1
+    container_name: loki
+    volumes:
+      - ./infra/loki/loki-config.yml:/etc/loki/config.yml:ro
+      - loki-data:/loki
+    command: -config.file=/etc/loki/config.yml
+    ports:
+      - "3100:3100"
+
+  promtail:
+    image: grafana/promtail:3.1.1
+    container_name: promtail
+    volumes:
+      - ./infra/promtail/promtail-config.yml:/etc/promtail/config.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - promtail-positions:/tmp
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    container_name: grafana
+    volumes:
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+      - loki
+
   interaction-service:
     build: ./services/interaction-service
     container_name: interaction-service
     ports:
       - "8001:8000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@interaction-db:5432/interaction_db
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      KEYCLOAK_ISSUER: http://localhost:8080/realms/petgame
+      KEYCLOAK_JWKS_URL: http://host.docker.internal:8080/realms/petgame/protocol/openid-connect/certs
+      KEYCLOAK_AUDIENCE: petgame-api
+      KEYCLOAK_PUBLIC_BASE: http://localhost:8080
+      KEYCLOAK_REALM: petgame
+      KEYCLOAK_CLIENT_ID: petgame-api
     depends_on:
       - interaction-db
       - rabbitmq
@@ -53,7 +112,26 @@ services:
     container_name: pet-service
     ports:
       - "8002:8000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@pet-db:5432/pet_db
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      KEYCLOAK_ISSUER: http://localhost:8080/realms/petgame
+      KEYCLOAK_JWKS_URL: http://host.docker.internal:8080/realms/petgame/protocol/openid-connect/certs
+      KEYCLOAK_AUDIENCE: petgame-api
+      KEYCLOAK_PUBLIC_BASE: http://localhost:8080
+      KEYCLOAK_REALM: petgame
+      KEYCLOAK_CLIENT_ID: petgame-api
     depends_on:
       - pet-db
       - rabbitmq
       - keycloak
+
+volumes:
+  loki-data:
+  prometheus-data:
+  grafana-data:
+  keycloak-data:
+  interaction-db-data:
+  pet-db-data:
+  rabbitmq-data:
+  promtail-positions:

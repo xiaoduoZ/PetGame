@@ -5,6 +5,41 @@ PetGame ist ein spielerisches Backend-System, in dem Benutzer mit einem digitale
 Wenn ein Benutzer tägliche Interaktionen (z. B. Wasser geben, Bewegung) erfolgreich abschließt, verbessert sich der Haustierstatus (HP/XP/Stimmung).
 Bei verpassten Interaktionen sinken diese Werte.
 
+# Links
+### Services
+- **interaction-service Swagger**: http://localhost:8001/docs  
+- **pet-service Swagger**: http://localhost:8002/docs
+
+### Keycloak (Auth)
+- **Keycloak Admin Console**: http://localhost:8080/admin/
+
+### RabbitMQ (Message Queue)
+- **RabbitMQ Management UI**: http://localhost:15672  
+  - Default Login: `guest / guest`
+
+### Prometheus (Monitoring)
+- **Prometheus UI**: http://localhost:9090  
+- **Targets Status**: http://localhost:9090/targets  
+
+### Grafana (Dashboards)
+- **Grafana UI**: http://localhost:3000  
+  - Default Login: `admin / admin`
+
+### Loki (Logs)
+- **Loki Ready** (debug): http://localhost:3100/ready  
+- **Loki Labels** (debug): http://localhost:3100/loki/api/v1/labels  
+
+---
+
+# Docker Compose Commands
+
+### Start / Stop / Rebuild
+```bash
+docker compose up -d
+docker compose down
+docker compose up --build -d
+```
+
 # Konzept
 
 ## Services

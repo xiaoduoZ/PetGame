@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: "interaction-service"
+    static_configs:
+      - targets: ["interaction-service:8000"]
+
+  - job_name: "pet-service"
+    static_configs:
+      - targets: ["pet-service:8000"]
