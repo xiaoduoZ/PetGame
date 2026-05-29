@@ -9,3 +9,7 @@ scrape_configs:
   - job_name: "pet-service"
     static_configs:
       - targets: ["pet-service:8000"]
+
+  - job_name: "world-service"
+    static_configs:
+      - targets: ["world-service:8000"]

@@ -1,0 +1,96 @@
+:root {
+  /* Cozy game palette — warm paper, wood, candy stats */
+  --paper: #fff7e9;
+  --paper-2: #fbe9c8;
+  --paper-inset: #f3dcb4;
+  --ink: #5b4636;
+  --ink-soft: #a08763;
+  --line: #e7c79a;
+  --line-strong: #d9a96b;
+  --wood: #c98a4b;
+  --wood-dark: #9c6532;
+
+  --hp: #ff8088;
+  --hp-dark: #e85d6a;
+  --xp: #7bc86c;
+  --xp-dark: #58a84b;
+  --mood: #ffc23d;
+  --mood-dark: #e89f1e;
+  --streak: #ff9f43;
+  --leaf: #7bc86c;
+  --sky: #8fd3f0;
+
+  --font: 'Fredoka', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: var(--font);
+  font-weight: 500;
+  color: var(--ink);
+  background: linear-gradient(180deg, #bfe9f7 0%, #ffe9c4 100%);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: var(--font);
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  color: inherit;
+}
+
+/* Cozy "sticker" panel: thick warm border + inner white ring + soft shadow */
+.panel {
+  background: var(--paper);
+  border: 3px solid var(--line-strong);
+  border-radius: 24px;
+  box-shadow: inset 0 0 0 3px #fffdf6, 0 12px 26px rgba(150, 110, 70, 0.22);
+}
+
+/* small keyboard-shortcut badge */
+.kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  background: var(--paper-2);
+  border: 1.5px solid var(--line-strong);
+  border-radius: 6px;
+  line-height: 1;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 8px;
+  border: 2px solid var(--paper);
+}

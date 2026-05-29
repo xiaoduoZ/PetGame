@@ -1,6 +1,7 @@
 import os
 
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from datetime import datetime
 import uuid
@@ -26,6 +27,19 @@ app = FastAPI(
         "clientId": os.getenv("KEYCLOAK_CLIENT_ID", "petgame-api"),
         "usePkceWithAuthorizationCodeGrant": True,
     },
+)
+
+CORS_ORIGINS = os.getenv(
+    "CORS_ORIGINS",
+    "http://localhost:5173,http://127.0.0.1:5173",
+).split(",")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[o.strip() for o in CORS_ORIGINS if o.strip()],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 HTTP_REQUESTS = Counter(
@@ -84,7 +98,8 @@ def complete_interaction(
             "template_id": record.template_id,
             "completed_at": record.completed_at.isoformat(),
             "hp_delta": 5,
-            "xp_reward": 10
+            "xp_reward": 10,
+            "coin_reward": 5
         }
 
         publish_interaction_completed(event)

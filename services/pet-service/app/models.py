@@ -14,6 +14,7 @@ class Pet(Base):
     level = Column(Integer, nullable=False, default=1)
     mood = Column(Integer, nullable=False, default=5)
     streak = Column(Integer, nullable=False, default=0)
+    coins = Column(Integer, nullable=False, default=0)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 

@@ -10,6 +10,16 @@ class PetResponse(BaseModel):
     level: int
     mood: int
     streak: int
+    coins: int
 
     class Config:
         from_attributes = True
+
+
+class SpendRequest(BaseModel):
+    amount: int
+
+
+class EarnRequest(BaseModel):
+    coins: int = 0
+    xp: int = 0

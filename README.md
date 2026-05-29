@@ -6,12 +6,23 @@ Wenn ein Benutzer tägliche Interaktionen (z. B. Wasser geben, Bewegung) erfolgr
 Bei verpassten Interaktionen sinken diese Werte.
 
 # Links
+### Frontend (Vue + Three.js)
+- **Mochi Island UI**: http://localhost:5173
+  - Low-Poly 3D-Insel mit reaktivem Haustier, Status-HUD und einer Live-Visualisierung des Microservice-Event-Flows (interaction-service → RabbitMQ → pet-service).
+  - Start: `cd frontend && npm install && npm run dev`
+  - Verbindet sich zuerst mit den echten Services; sind sie offline, fällt die UI automatisch in einen originalgetreuen **Demo-Modus** (gleiche Regeln wie das Backend) zurück.
+
 ### Services
 - **interaction-service Swagger**: http://localhost:8001/docs  
 - **pet-service Swagger**: http://localhost:8002/docs
+- **world-service Swagger**: http://localhost:8003/docs  
+  - Speichert die vom Benutzer gebaute Karte (`GET`/`PUT /api/v1/map/me`) in **world_db**. Die UI bietet einen Build-Modus (🧱) zum Platzieren/Einfärben von Gebäuden und zum Erweitern der Karte.
 
 ### Keycloak (Auth)
 - **Keycloak Admin Console**: http://localhost:8080/admin/
+  - Damit die Vue-UI den Live-Login (Browser) nutzen kann, muss der Client `petgame-api` haben:
+    - **Direct access grants: ON** (Password-Grant)
+    - **Web Origins**: `http://localhost:5173` (CORS) — sonst fällt die UI automatisch in den Demo-Modus.
 
 ### RabbitMQ (Message Queue)
 - **RabbitMQ Management UI**: http://localhost:15672  

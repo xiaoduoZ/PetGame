@@ -32,6 +32,7 @@ def process_completed_event(event: dict):
         user_id = event["user_id"]
         hp_delta = int(event.get("hp_delta", 0))
         xp_reward = int(event.get("xp_reward", 0))
+        coin_reward = int(event.get("coin_reward", 0))
 
         pet = db.query(Pet).filter(Pet.user_id == user_id).first()
         created = False
@@ -53,6 +54,7 @@ def process_completed_event(event: dict):
 
         pet.hp += hp_delta
         pet.xp += xp_reward
+        pet.coins = (pet.coins or 0) + coin_reward
         pet.level = (pet.xp // 100) + 1
 
         processed = ProcessedEvent(event_id=event_id, event_type=event.get("event_type", "interaction.completed"))
